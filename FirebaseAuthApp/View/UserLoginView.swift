@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//for user login or user account creation
 struct UserLoginView: View {
     @EnvironmentObject var auth: AuthenticateViewModel
     
@@ -14,6 +15,7 @@ struct UserLoginView: View {
     @State private var email = ""
     @State private var isSignUp = false
     
+    //lets user submit if field isn't empty
     private var userSubmit: Bool {
         !email.trimmingCharacters(in: .whitespaces).isEmpty && passwd.count >= 1 && !auth.isLoading
     }
@@ -27,6 +29,7 @@ struct UserLoginView: View {
                 .font(.headline)
                 .foregroundStyle(.secondary)
             
+            //field for email
             TextField("Email", text: $email)
                 .textContentType(.emailAddress)
                 .keyboardType(.emailAddress)
@@ -35,6 +38,7 @@ struct UserLoginView: View {
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 8).fill(Color(.secondarySystemBackground)))
             
+            //field for password
             SecureField("Password", text: $passwd)
                 .textContentType(isSignUp ? .newPassword: .password)
                 .padding()
@@ -47,6 +51,14 @@ struct UserLoginView: View {
                     .multilineTextAlignment(.center)
             }
             
+            if passwd.isEmpty || email.isEmpty {
+                Text("Email and password is required to login")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                
+            }
+            
+            //button for login or signup
             Button {
                 Task {
                     if isSignUp {
@@ -72,6 +84,7 @@ struct UserLoginView: View {
             .controlSize(.large)
             .disabled(!userSubmit)
             
+            //button toggle for login or sign up
             Button(isSignUp ? "Already have an account? Log in here" : "New here? Sign up") {
                 auth.errorMsg = nil
                 isSignUp.toggle()

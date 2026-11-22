@@ -120,7 +120,7 @@ struct ContentView: View {
             .padding(.horizontal)
             
             //Logo
-                Image(systemName: "purpleDragon")
+                Image("purpleDragon")
                     .resizable()
                     .scaledToFill()
                     .clipShape(Circle())

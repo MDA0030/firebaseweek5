@@ -3,6 +3,7 @@
 //  FirebaseAuthApp
 //
 //  Created by matt on 11/16/26.
+// Uses firebase firestore concept of title and content from lecture video
 //
 
 
@@ -13,6 +14,7 @@ import FirebaseCore
 
 
 @main
+//struct for firebase login info
 struct FirebaseAuthApp: App {
     @StateObject private var auth: AuthenticateViewModel
     
@@ -23,7 +25,6 @@ struct FirebaseAuthApp: App {
     }
     
 
- 
 
     var body: some Scene {
         WindowGroup {
@@ -33,6 +34,7 @@ struct FirebaseAuthApp: App {
     }
 }
 
+//shows store ContentView screen after login
 struct RootView: View {
     @EnvironmentObject var auth: AuthenticateViewModel
     

@@ -11,13 +11,16 @@ import FirebaseAuth
 import Combine
 
 @MainActor
+//handles logging in, logging out and signup
 final class AuthenticateViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMsg: String?
     @Published var fbUser: User?
     
+    //listener handle for firebase
     private var handle: AuthStateDidChangeListenerHandle?
     
+    //updates for login or logout or if user still logged in
     init() {
         fbUser = Auth.auth().currentUser
         handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in self?.fbUser = user}
@@ -28,6 +31,7 @@ final class AuthenticateViewModel: ObservableObject {
 
 var isLoggedIn: Bool { fbUser != nil }
 
+    //function for user signup with email and password
 func userSignUp(email: String, passwd: String) async {
     errorMsg = nil
     isLoading = true
@@ -40,6 +44,7 @@ func userSignUp(email: String, passwd: String) async {
     
 }
 
+    //function for user sign out
 func userSignOut() {
     errorMsg = nil
     do {
@@ -49,6 +54,7 @@ func userSignOut() {
     }
 }
 
+    //function for user sign in with email and password
 func userSignIn(email: String, passwd: String) async {
         errorMsg = nil
         isLoading = true
@@ -61,6 +67,7 @@ func userSignIn(email: String, passwd: String) async {
     }
 
     
+    //function for firebase errors of weak password, wrong password, email not valid,loss of network connection, existing email or too many tries
 private func message(for error: Error) -> String {
     let idError = error as NSError
     guard let code = AuthErrorCode(rawValue: idError.code) else {
