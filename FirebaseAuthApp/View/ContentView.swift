@@ -3,6 +3,7 @@
 //  Book2
 //
 //  Created by matt on 10/26/26.
+// Uses firebase firestore concept of title and content from lecture video
 //
 
 import SwiftUI
@@ -17,6 +18,10 @@ struct ContentView: View {
     
     //
     @State private var mysteryBook: Book?
+    
+    // loads store banner based on title and content in firestore
+    @StateObject private var banner = AnnounceViewModel()
+    
     
     //returns price of book and adds Book.mysteryPrice of $9.99 if toggled, else adds 0
     private var mysteryTotal: Double {
@@ -48,6 +53,9 @@ struct ContentView: View {
         VStack(spacing:0) {
             header
             
+            //banner that uses firestore for store messages
+            showStoreBanner
+            
             ScrollView {
                 VStack(spacing:10) {
                     ForEach(Book.bookCatalog) {book in bookRow(book)
@@ -65,7 +73,33 @@ struct ContentView: View {
         } message: {
             Text(confirmationText)
         }
+        .task {
+            await banner.announcementLoader()
+        }
     }
+    
+    // banner that ties to firebase firestore
+    @ViewBuilder
+    private var showStoreBanner: some View {
+        if !banner.content.isEmpty || !banner.title.isEmpty {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(banner.title)
+                    .font(.headline)
+                Text(banner.content)
+                    .font(.subheadline)
+                
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 10).fill(Color.purple.opacity(0.25)))
+            .padding(.horizontal)
+            .padding(.bottom, 6)
+        }
+        
+        
+    }
+    
+    
         
     // view for logo and name of book store
     private var header: some View {
